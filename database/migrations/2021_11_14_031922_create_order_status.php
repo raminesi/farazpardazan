@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWarehouseStatus extends Migration
+class CreateOrderStatus extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWarehouseStatus extends Migration
      */
     public function up()
     {
-        Schema::create('warehouse_status', function (Blueprint $table) {
+        Schema::create('order_status', function (Blueprint $table) {
             $table->tinyIncrements('id');
             $table->string('title');
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateWarehouseStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warehouse_status');
+        Schema::dropIfExists('order_status');
     }
 }

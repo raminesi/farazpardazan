@@ -10,3 +10,9 @@
 ## Setup Project
 
 
+1 : composer install </br>
+2 : Configuration ".env" file </br>
+3 : php artisan config:cache </br>
+4 : php artisan key:generate </br>
+5 : php artisan migrate </br>
+6 : php artisan db:seed --class=FirstConfig </br>

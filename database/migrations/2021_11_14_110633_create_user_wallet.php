@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWarehouse extends Migration
+class CreateUserWallet extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateWarehouse extends Migration
      */
     public function up()
     {
-        Schema::create('warehouse', function (Blueprint $table) {
+        Schema::create('user_wallet', function (Blueprint $table) {
             $table->id();
-            $table->float('quantity' , 10 , 2);
-            $table->float('price' , 15 , 2);
-            $table->float('credit' , 15 , 2);
+            $table->unsignedBigInteger('user_id');
+            $table->float('quantity' , 10 , 2)->default(0);
+            $table->float('credit' , 15 , 2)->default(0);
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -29,6 +30,6 @@ class CreateWarehouse extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warehouse');
+        Schema::dropIfExists('user_wallet');
     }
 }
