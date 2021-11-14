@@ -16,3 +16,4 @@
 4 : php artisan key:generate </br>
 5 : php artisan migrate </br>
 6 : php artisan db:seed --class=FirstConfig </br>
+7 : php artisan l5-swagger:generate </br>
