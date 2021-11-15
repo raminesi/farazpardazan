@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Http\Traits\ApiResponseTrait;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * @OA\Post(
      *   path="/api/register",
@@ -99,6 +103,20 @@ class AuthController extends Controller
      */
     public function login(AuthRequest $request)
     {
-
+        if(Auth::attempt(['email' => $request->email , 'password' => $request->password])){
+            $user = User::where('email' , $request->email)->first();
+            $tokenResult = $user->createToken('Personal Access Token');
+            return $this->apiResponse(
+                [
+                    'success' => true,
+                    'result' => [
+                    'token' => $tokenResult,
+                    'user' => $user
+                    ]
+                ]
+            );
+        }else{
+            return $this->respondUnAuthorized();
+        }
     }
 }

@@ -17,3 +17,5 @@
 5 : php artisan migrate </br>
 6 : php artisan db:seed --class=FirstConfig </br>
 7 : php artisan l5-swagger:generate </br>
+8 : php artisan serve </br>
+9 : Open this link in the browser: "http://127.0.0.1:8000/api/documentation" </br>
