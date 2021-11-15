@@ -13,9 +13,9 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *   path="/api/register",
-     *   tags={"auth"},
+     *   tags={"Auth"},
      *   summary="Register",
-     *   operationId="authRegister",
+     *   operationId="Register",
      *
      *   @OA\RequestBody(
      *      required=true,
@@ -23,7 +23,7 @@ class AuthController extends Controller
      *      @OA\Property(property="name", type="string", format="string", example="name"),
      *      @OA\Property(property="email", type="string", format="emai", example="user@gmail.com"),
      *      @OA\Property(property="password", type="string", format="password", example="123456"),
-     *      @OA\Property(property="password_confirmation", type="string", format="password", example="123456"),
+     *      @OA\Property(property="confirm_password", type="string", format="password", example="123456"),
      *      )
      *   ),
      *
@@ -51,15 +51,34 @@ class AuthController extends Controller
      */
     public function register(AuthRequest $request)
     {
-
+        try
+        {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+            $tokenResult = $user->createToken('Personal Access Token');
+            return $this->apiResponse(
+                [
+                    'success' => true,
+                    'result' => [
+                    'token' => $tokenResult->plainTextToken,
+                    'user' => $user
+                    ]
+                ]
+            );
+        }catch (\Exception $e){
+            return $this->respondError('Registration failed');
+        }
     }
 
     /**
      * @OA\Post(
      *   path="/api/login",
-     *   tags={"auth"},
+     *   tags={"Auth"},
      *   summary="Login",
-     *   operationId="authLogin",
+     *   operationId="Login",
      *
      *   @OA\Parameter(
      *      name="email",
@@ -76,7 +95,7 @@ class AuthController extends Controller
      *      required=true,
      *      example="123456",
      *      @OA\Schema(
-     *          type="string"
+     *          type="password"
      *      )
      *   ),
      *   @OA\Response(
@@ -110,8 +129,8 @@ class AuthController extends Controller
                 [
                     'success' => true,
                     'result' => [
-                    'token' => $tokenResult,
-                    'user' => $user
+                        'token' => $tokenResult->plainTextToken,
+                        'user' => $user
                     ]
                 ]
             );

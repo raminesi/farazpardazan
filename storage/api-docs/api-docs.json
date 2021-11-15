@@ -8,10 +8,10 @@
         "/api/register": {
             "post": {
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "Register",
-                "operationId": "authRegister",
+                "operationId": "Register",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -33,7 +33,7 @@
                                         "format": "password",
                                         "example": "123456"
                                     },
-                                    "password_confirmation": {
+                                    "confirm_password": {
                                         "type": "string",
                                         "format": "password",
                                         "example": "123456"
@@ -73,10 +73,10 @@
         "/api/login": {
             "post": {
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "Login",
-                "operationId": "authLogin",
+                "operationId": "Login",
                 "parameters": [
                     {
                         "name": "email",
@@ -92,9 +92,147 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "password"
                         },
                         "example": "123456"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/warehouse": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Warehouse",
+                "operationId": "warehouse",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order": {
+            "post": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Order",
+                "description": "transaction : buy / sell",
+                "operationId": "Order",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "type": "floatval",
+                                        "format": "floatval",
+                                        "example": 25.5
+                                    },
+                                    "quantity": {
+                                        "type": "floatval",
+                                        "format": "floatval",
+                                        "example": 1.5
+                                    },
+                                    "transaction": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "buy"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/{order_id}": {
+            "put": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Order Confirm",
+                "operationId": "OrderConfirm",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
                     }
                 ],
                 "responses": {

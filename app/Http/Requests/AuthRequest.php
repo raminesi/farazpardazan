@@ -35,7 +35,7 @@ class AuthRequest extends FormRequest
             break;
             case 'login':
                 return [
-                    'email' => 'required|email|unique:users',
+                    'email' => 'required|email',
                     'password' => 'required|string|min:6'
                 ];
             break;
