@@ -21,7 +21,7 @@ class FirstConfig extends Seeder
             ['id' => 3 , 'title' => 'confirmed']
         ]);
         Warehouse::insert([
-            ['id' => 1 , 'quantity' => 1000000 , 'price' => 150 , 'credit' => 20000]
+            ['id' => 1 , 'quantity' => 1000000 , 'price' => 25.5 , 'credit' => 20000]
         ]);
     }
 }

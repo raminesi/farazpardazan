@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserWallet extends Migration
+class CreateUserWallets extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateUserWallet extends Migration
      */
     public function up()
     {
-        Schema::create('user_wallet', function (Blueprint $table) {
+        Schema::create('user_wallets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->float('quantity' , 10 , 2)->default(0);

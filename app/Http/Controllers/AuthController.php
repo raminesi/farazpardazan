@@ -6,6 +6,7 @@ use App\Http\Requests\AuthRequest;
 use App\Http\Traits\ApiResponseTrait;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -51,6 +52,7 @@ class AuthController extends Controller
      */
     public function register(AuthRequest $request)
     {
+        DB::beginTransaction();
         try
         {
             $user = User::create([
@@ -59,6 +61,7 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password)
             ]);
             $tokenResult = $user->createToken('Personal Access Token');
+            DB::commit();
             return $this->apiResponse(
                 [
                     'success' => true,
@@ -69,6 +72,8 @@ class AuthController extends Controller
                 ]
             );
         }catch (\Exception $e){
+            DB::rollBack();
+            return $e;
             return $this->respondError('Registration failed');
         }
     }
@@ -95,7 +100,7 @@ class AuthController extends Controller
      *      required=true,
      *      example="123456",
      *      @OA\Schema(
-     *          type="password"
+     *          type="string"
      *      )
      *   ),
      *   @OA\Response(

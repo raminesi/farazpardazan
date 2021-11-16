@@ -92,7 +92,7 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "password"
+                            "type": "string"
                         },
                         "example": "123456"
                     }
@@ -130,6 +130,39 @@
                 ],
                 "summary": "Warehouse",
                 "operationId": "warehouse",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/wallet": {
+            "get": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Wallet",
+                "operationId": "Wallet",
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -224,6 +257,50 @@
                 ],
                 "summary": "Order Confirm",
                 "operationId": "OrderConfirm",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Returns when user is not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/order/cancell/{order_id}": {
+            "put": {
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Order cancell",
+                "operationId": "OrderCancell",
                 "parameters": [
                     {
                         "name": "order_id",

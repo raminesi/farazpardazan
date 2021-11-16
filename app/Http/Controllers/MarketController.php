@@ -61,6 +61,52 @@ class MarketController extends Controller
         }
     }
 
+        /**
+     * @OA\Get(
+     *   path="/api/wallet",
+     *   tags={"Market"},
+     *   summary="Wallet",
+     *   operationId="Wallet",
+     *
+     *   @OA\Response(
+     *      response=200,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *    response=401,
+     *    description="Returns when user is not authenticated",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example=""),
+     *    )
+     *   ),
+     *)
+     **/
+    /**
+     * warehouse api
+     *
+     * @return \Illuminate\Http\JsonResponse
+    */
+    public function wallet()
+    {
+        $wallet = Auth::user()->wallet;
+        if($wallet){
+            return $this->apiResponse(
+            [
+                'success' => true,
+                'result' => [
+                    'quantity' => $wallet->quantity,
+                    'credit' => $wallet->credit,
+                ]
+            ]
+            );
+        }else{
+            return $this->respondError('Not found' , 404);
+        }
+    }
+
     /**
      * @OA\Post(
      *   path="/api/order",
@@ -102,17 +148,18 @@ class MarketController extends Controller
      */
     public function order(MarketRequest $request)
     {
+        DB::beginTransaction();
         try
         {
-            $total_price = $request->quantity * $request->price;
             $order = Order::create([
                 'user_id' => Auth::user()->id,
                 'quantity' => $request->quantity,
                 'price' => $request->price,
-                'total_price' => $total_price,
+                'total_price' => $request->quantity * $request->price,
                 'transaction' => $request->transaction,
                 'status_id' => 1
             ]);
+            DB::commit();
             return $this->apiResponse(
                     [
                         'success' => true,
@@ -120,6 +167,7 @@ class MarketController extends Controller
                     ]
                 );
         }catch (\Exception $e){
+            DB::rollBack();
             return $this->respondError('Order failed');
         }
     }
@@ -164,13 +212,77 @@ class MarketController extends Controller
      */
     public function order_confirm($id)
     {
-        $order = Order::find($id);
+        $user  = Auth::user();
+        $order = Order::where('id' , $id)->where('user_id' , $user->id)->where('status_id' , 1)->first();
         if($order){
             DB::beginTransaction();
             try
             {
                 $order->update(['status_id' => 3]);
+                DB::commit();
+                return $this->apiResponse(
+                    [
+                        'success' => true,
+                        'result' => $order
+                    ]
+                );
+            }catch (\Exception $e){
+                DB::rollBack();
+                return $e;
+                return $this->respondError('Order failed');
+            }
+        }else{
+            return $this->respondError('Not found' , 404);
+        }
+    }
 
+    /**
+     * @OA\Put(
+     *   path="/api/order/cancell/{order_id}",
+     *   tags={"Market"},
+     *   summary="Order cancell",
+     *   operationId="OrderCancell",
+     *
+     *   @OA\Parameter(
+     *      name="order_id",
+     *      in="path",
+     *      required=true,
+     *      example=1,
+     *      @OA\Schema(
+     *           type="integer"
+     *      )
+     *   ),
+     *
+     *   @OA\Response(
+     *      response=200,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *    response=401,
+     *    description="Returns when user is not authenticated",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example=""),
+     *    )
+     *   ),
+     *)
+     **/
+    /**
+     * order api
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function order_cancell($id)
+    {
+        $user  = Auth::user();
+        $order = Order::where('id' , $id)->where('user_id' , $user->id)->where('status_id' , 1)->first();
+        if($order){
+            DB::beginTransaction();
+            try
+            {
+                $order->update(['status_id' => 2]);
                 DB::commit();
                 return $this->apiResponse(
                     [

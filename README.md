@@ -9,7 +9,6 @@
 
 ## Setup Project
 
-
 1 : composer install </br>
 2 : Configuration ".env" file </br>
 3 : php artisan config:cache </br>

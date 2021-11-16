@@ -51,4 +51,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserWallet::class , 'user_id');
     }
+
 }
